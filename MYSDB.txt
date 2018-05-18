@@ -1,0 +1,143 @@
+USE master
+IF EXISTS(select * from sys.databases where name='BankDB')
+DROP DATABASE BankDB
+
+CREATE DATABASE BankDB
+GO
+
+Use BankDB;CREATE TABLE Bank 
+(
+	BankID int IDENTITY(1,1) NOT NULL,
+
+	Address VARCHAR(250),
+	Name VARCHAR(250),
+	Telephone VARCHAR(250),
+	Uuid VARCHAR(250),
+	PRIMARY KEY (BankID)
+	)
+
+GO
+	Use BankDB;CREATE TABLE Person
+ 
+	(
+
+	PersonID INT IDENTITY(1,1) NOT NULL,
+
+	FirstName VARCHAR(250) DEFAULT NULL,
+
+	LastName VARCHAR(250) DEFAULT NULL,
+
+	Address VARCHAR(250) DEFAULT NULL,
+
+	Occupation VARCHAR(250),
+	Marital_status  VARCHAR(250),
+	Health_status VARCHAR(250),
+	Salary DECIMAL,
+	Childern  VARCHAR(250),
+tel VARCHAR(250),
+	BankID  INT,
+	PRIMARY KEY (PersonID),
+	FOREIGN KEY (BankID) REFERENCES Bank(BankID)
+)
+GO
+	
+Use BankDB;CREATE TABLE Acount	
+(
+	AcountID INT IDENTITY(1,1) NOT NULL,
+	TakeOff DECIMAL,
+	PersonID INT,
+	PayIN DECIMAL,
+	Amount DECIMAL,
+	PRIMARY KEY (AcountID),
+	FOREIGN KEY (PersonID) REFERENCES Person(PersonID)
+	)
+
+GO	
+	Use BankDB;CREATE TABLE AcountType
+	
+	(
+	AcountTypeID int IDENTITY(1,1) NOT NULL,
+
+	SaveType VARCHAR(250),
+	AcountID INT,
+
+	PRIMARY KEY (AcountTypeID),
+
+	FOREIGN KEY (AcountID) REFERENCES Acount(AcountID)
+
+	)
+
+GO
+	
+	Use BankDB;CREATE TABLE Login
+	 (
+	LoginID int IDENTITY(1,1) NOT NULL,
+
+	UserName VARCHAR(250),
+
+	Password VARCHAR(250),
+
+	PersonID INT,
+
+	FOREIGN KEY (PersonID ) REFERENCES Person(PersonID),
+
+	PRIMARY KEY (LoginID)
+
+	 )
+
+GO
+	
+
+
+GO	
+	Use BankDB;CREATE TABLE MovementsAccount
+
+	(
+	MovementsAccountID INT IDENTITY(1,1) NOT NULL,
+
+	DateMovementsAccount Datetime,
+	Acount  DECIMAL,
+
+	AcountID  INT,
+	PRIMARY KEY (MovementsAccountID),
+
+	FOREIGN KEY (AcountID) REFERENCES Acount(AcountID)
+
+	)
+
+	
+
+Use BankDB; insert into bank(Address,Name,Telephone,Uuid)values('Adresse1','PASt Bank',0123456,''),('Adresse2','SParkasse Südholistein',0123456,''),('Adresse3','HSPA',0123456,'')
+GO 
+Use BankDB; insert into person(FirstName,  LastName,   Address,  Occupation,Marital_status,Health_status,Salary,Childern,tel,BankID)values 
+								('Khaled','algoursh','khaledadresee','Doctoer','Good','Single'       ,111.2,1,      1234567,1),	
+									('ali','Josi','Josiadresee','Student','Good','Single'       ,111.2,1,      1234567,2),
+										('Jan','Müller','Mülleradresee','Worker','Good','Marred'       ,111.2,2,      1234567,3)
+GO
+use BankDB; insert into Acount(TakeOff,PersonID,PayIN,Amount)values
+								(1000.33,1,485.33,452),	
+								(1500.33,2,485.33,100),
+								(2500.33,3,485.33,200)
+GO
+use BankDB; insert into MovementsAccount(DateMovementsAccount,Acount,AcountID)Values
+										('2004.2.2',2.22,1),('2005.2.2',2.22,2),('2005.2.2',2.22,3)
+GO
+use BankDB; insert into Login(UserName,Password,PersonID)Values('Khaled','322',1),('jan','322',2),('Khali','322',3)
+GO
+use BankDB; insert into AcountType(SaveType,AcountID)Values('Giro',1),('Spar',2),('Kridet',3)
+
+
+
+
+ delete from MovementsAccount where AcountID=3
+
+  delete from AcountType where AcountID=3
+
+  delete from Acount where AcountID=3
+  
+  delete from Login where Login.PersonID=3
+  delete from Person where PersonID=3
+ Go
+
+ use BankDB; select Person.FirstName,Person.PersonID,Person.LastName, bank.Name,Person.Address,Person.tel,Person.Marital_status ,bank.Name,Person.Occupation ,Acount.Amount,Acount.AcountID from   bank left join Person  Person on Person.BankID=bank.BankID left join Acount Acount on Acount.PersonID=Person.PersonID
+ select *from Person left join Acount on Person.PersonID=Acount.PersonID inner join AcountType on AcountType.AcountID=Acount.AcountID inner join bank on Bank.BankID=Person.BankID inner join MovementsAccount on MovementsAccount.AcountID=Acount.AcountID
